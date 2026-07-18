@@ -20,6 +20,7 @@
       --success: #4ade80;
       --warning: #fb923c;
       --error: #f87171;
+      --skill: #a78bfa;
       --radius: 10px;
     }
 
@@ -34,11 +35,7 @@
       padding: 2rem 1rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
+    header { text-align: center; margin-bottom: 2rem; }
     header h1 {
       font-size: 1.9rem;
       font-weight: 700;
@@ -47,12 +44,7 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
-    header p {
-      color: var(--text-muted);
-      margin-top: 0.4rem;
-      font-size: 0.95rem;
-    }
+    header p { color: var(--text-muted); margin-top: 0.4rem; font-size: 0.95rem; }
 
     .card {
       background: var(--surface);
@@ -63,7 +55,6 @@
       max-width: 820px;
       margin-bottom: 1.25rem;
     }
-
     .card h2 {
       font-size: 0.85rem;
       text-transform: uppercase;
@@ -71,6 +62,66 @@
       color: var(--text-muted);
       margin-bottom: 1rem;
     }
+
+    /* Mode tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .tab-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); border-color: var(--accent); }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .tab-btn.active.skill-tab {
+      background: var(--skill);
+      border-color: var(--skill);
+    }
+
+    /* Skill panel */
+    #skillPanel {
+      display: none;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      background: rgba(167,139,250,0.07);
+      border: 1px solid rgba(167,139,250,0.25);
+      border-radius: var(--radius);
+      padding: 1.1rem;
+    }
+    #skillPanel.visible { display: flex; }
+    #skillPanel label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.2rem; display: block; }
+    #skillPanel input, #skillPanel textarea.skill-ta {
+      width: 100%;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #skillPanel input:focus, #skillPanel textarea.skill-ta:focus { border-color: var(--skill); }
+    #skillPanel textarea.skill-ta { height: 70px; resize: vertical; font-family: inherit; }
+    .skill-row { display: flex; gap: 0.75rem; }
+    .skill-row > div { flex: 1; }
+    .skill-required { color: var(--error); }
 
     /* Drop zone */
     #dropZone {
@@ -82,12 +133,7 @@
       transition: border-color 0.2s, background 0.2s;
       background: var(--surface2);
     }
-
-    #dropZone.drag-over {
-      border-color: var(--accent);
-      background: rgba(99,102,241,0.08);
-    }
-
+    #dropZone.drag-over { border-color: var(--accent); background: rgba(99,102,241,0.08); }
     #dropZone .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
     #dropZone p { color: var(--text-muted); font-size: 0.9rem; }
     #dropZone strong { color: var(--text); }
@@ -108,28 +154,19 @@
       outline: none;
       transition: border-color 0.2s;
     }
-
     #textInput:focus { border-color: var(--accent); }
 
-    /* Counter */
     #charCounter {
       text-align: right;
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-top: 0.4rem;
     }
+    #charCounter.warn   { color: var(--warning); font-weight: 600; }
+    #charCounter.danger { color: var(--error);   font-weight: 700; }
 
-    #charCounter.warn { color: var(--warning); font-weight: 600; }
-    #charCounter.danger { color: var(--error); font-weight: 700; }
-
-    /* Controls row */
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
+    /* Controls */
+    .controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
     label { font-size: 0.88rem; color: var(--text-muted); }
 
     select {
@@ -142,7 +179,6 @@
       cursor: pointer;
       outline: none;
     }
-
     select:focus { border-color: var(--accent); }
 
     .btn {
@@ -157,34 +193,16 @@
       align-items: center;
       gap: 0.4rem;
     }
-
     .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
+    .btn-primary  { background: var(--accent); color: #fff; }
     .btn-primary:hover { background: var(--accent-hover); }
-
-    .btn-secondary {
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
+    .btn-skill    { background: var(--skill); color: #fff; }
+    .btn-skill:hover  { background: #c4b5fd; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
     .btn-secondary:hover { border-color: var(--accent); color: var(--accent-hover); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
+    .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
     .btn-ghost:hover { color: var(--error); border-color: var(--error); }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
     /* Status */
     #status {
@@ -194,14 +212,15 @@
       font-size: 0.88rem;
       font-weight: 500;
       display: none;
+      max-width: 820px;
+      width: 100%;
     }
-
-    #status.show { display: block; }
-    #status.success { background: rgba(74,222,128,0.12); color: var(--success); border: 1px solid rgba(74,222,128,0.25); }
+    #status.show    { display: block; }
+    #status.success { background: rgba(74,222,128,0.12);  color: var(--success); border: 1px solid rgba(74,222,128,0.25); }
     #status.error   { background: rgba(248,113,113,0.12); color: var(--error);   border: 1px solid rgba(248,113,113,0.25); }
-    #status.info    { background: rgba(99,102,241,0.1);  color: var(--accent-hover); border: 1px solid rgba(99,102,241,0.25); }
+    #status.info    { background: rgba(99,102,241,0.1);   color: var(--accent-hover); border: 1px solid rgba(99,102,241,0.25); }
+    #status.skill   { background: rgba(167,139,250,0.1);  color: var(--skill);   border: 1px solid rgba(167,139,250,0.3); }
 
-    /* Badge */
     #formatBadge {
       font-size: 0.75rem;
       padding: 0.2rem 0.55rem;
@@ -212,6 +231,23 @@
       font-family: monospace;
       margin-left: auto;
     }
+
+    /* Skill preview */
+    #skillPreview {
+      display: none;
+      background: var(--surface2);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: var(--radius);
+      padding: 1rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--skill);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 0.75rem;
+    }
+    #skillPreview.visible { display: block; }
 
     footer {
       color: var(--text-muted);
@@ -226,12 +262,50 @@
 
 <header>
   <h1>✦ Text → Perplexity Converter</h1>
-  <p>Convert any text to a Perplexity Space–ready <code>.md</code> or <code>.txt</code> file</p>
+  <p>Convert text to a Perplexity Space knowledge file <em>or</em> a valid <code>SKILL.md</code></p>
 </header>
+
+<!-- Mode selector -->
+<div class="card">
+  <h2>① Select Mode</h2>
+  <div class="tabs">
+    <button class="tab-btn active" id="tabKnowledge">📄 Knowledge File (.md / .txt)</button>
+    <button class="tab-btn skill-tab" id="tabSkill">⚡ Perplexity Skill (SKILL.md)</button>
+  </div>
+
+  <!-- Skill metadata panel (shown in skill mode) -->
+  <div id="skillPanel">
+    <p style="font-size:0.82rem;color:var(--skill);margin-bottom:0.25rem">⚡ SKILL.md requires valid YAML frontmatter. Fill in the fields below — they will be auto-inserted at the top of your file.</p>
+    <div class="skill-row">
+      <div>
+        <label>Skill Name <span class="skill-required">*</span></label>
+        <input id="skillName" type="text" placeholder="e.g. Summarise Research Papers" maxlength="80" />
+      </div>
+      <div>
+        <label>Version</label>
+        <input id="skillVersion" type="text" placeholder="1.0.0" maxlength="20" />
+      </div>
+    </div>
+    <div>
+      <label>Description <span class="skill-required">*</span></label>
+      <textarea class="skill-ta" id="skillDescription" placeholder="What does this skill do? e.g. Summarises academic papers into structured key findings."></textarea>
+    </div>
+    <div class="skill-row">
+      <div>
+        <label>Author (optional)</label>
+        <input id="skillAuthor" type="text" placeholder="Your name or handle" maxlength="60" />
+      </div>
+      <div>
+        <label>Tags (optional, comma-separated)</label>
+        <input id="skillTags" type="text" placeholder="research, summarisation, academic" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Drop Zone -->
 <div class="card">
-  <h2>① Drop a File</h2>
+  <h2>② Drop a File</h2>
   <div id="dropZone">
     <div class="icon">📂</div>
     <p><strong>Drag &amp; drop</strong> a <code>.txt</code> or <code>.md</code> file here</p>
@@ -242,146 +316,168 @@
 
 <!-- Text Input -->
 <div class="card">
-  <h2>② Paste or Type Your Text</h2>
-  <textarea id="textInput" placeholder="Paste your content here — articles, notes, documentation, transcripts…"></textarea>
+  <h2>③ Paste or Type Your Text</h2>
+  <textarea id="textInput" placeholder="Paste your content here — articles, notes, skill instructions, documentation…"></textarea>
   <div id="charCounter">0 characters</div>
 </div>
 
 <!-- Controls -->
 <div class="card">
-  <h2>③ Format &amp; Download</h2>
-  <div class="controls" style="margin-bottom:1rem">
-    <label for="formatSelect">Output format:</label>
-    <select id="formatSelect">
-      <option value="auto" selected>Auto-detect</option>
-      <option value="md">Force Markdown (.md)</option>
-      <option value="txt">Force Plain Text (.txt)</option>
-    </select>
-    <span id="formatBadge">.md</span>
-    <button class="btn btn-ghost" id="clearBtn" style="margin-left:auto">🗑 Clear</button>
+  <h2>④ Download</h2>
+
+  <!-- Knowledge mode controls -->
+  <div id="knowledgeControls">
+    <div class="controls" style="margin-bottom:1rem">
+      <label for="formatSelect">Output format:</label>
+      <select id="formatSelect">
+        <option value="auto" selected>Auto-detect</option>
+        <option value="md">Force Markdown (.md)</option>
+        <option value="txt">Force Plain Text (.txt)</option>
+      </select>
+      <span id="formatBadge">.md</span>
+      <button class="btn btn-ghost" id="clearBtn" style="margin-left:auto">🗑 Clear</button>
+    </div>
+    <div class="controls">
+      <button class="btn btn-primary" id="downloadBtn" disabled>⬇ Download .md / .txt</button>
+      <button class="btn btn-secondary" id="downloadZipBtn" disabled>📦 Download .zip</button>
+    </div>
   </div>
-  <div class="controls">
-    <button class="btn btn-primary" id="downloadBtn" disabled>⬇ Download .md / .txt</button>
-    <button class="btn btn-secondary" id="downloadZipBtn" disabled>📦 Download .zip</button>
+
+  <!-- Skill mode controls -->
+  <div id="skillControls" style="display:none">
+    <div class="controls" style="margin-bottom:1rem">
+      <button class="btn btn-ghost" id="clearBtnSkill" style="margin-left:auto">🗑 Clear</button>
+    </div>
+    <div class="controls" style="margin-bottom:0.75rem">
+      <button class="btn btn-skill" id="downloadSkillBtn" disabled>⚡ Download SKILL.md</button>
+      <button class="btn btn-ghost" id="previewSkillBtn" disabled>👁 Preview Frontmatter</button>
+    </div>
+    <div id="skillPreview"></div>
   </div>
 </div>
 
 <!-- Status -->
 <div id="status"></div>
 
-<footer>Converts text for upload to Perplexity Spaces · Max 18M characters · v1.0</footer>
+<footer>Converts text for Perplexity Spaces &amp; Skills · Max 18M characters · v2.0</footer>
 
 <script>
-  const textarea    = document.getElementById('textInput');
-  const dropZone    = document.getElementById('dropZone');
-  const fileInput   = document.getElementById('fileInput');
-  const formatSel   = document.getElementById('formatSelect');
-  const formatBadge = document.getElementById('formatBadge');
-  const charCounter = document.getElementById('charCounter');
-  const downloadBtn = document.getElementById('downloadBtn');
-  const downloadZipBtn = document.getElementById('downloadZipBtn');
-  const clearBtn    = document.getElementById('clearBtn');
-  const statusEl    = document.getElementById('status');
+  // Elements
+  const textarea         = document.getElementById('textInput');
+  const dropZone         = document.getElementById('dropZone');
+  const fileInput        = document.getElementById('fileInput');
+  const formatSel        = document.getElementById('formatSelect');
+  const formatBadge      = document.getElementById('formatBadge');
+  const charCounter      = document.getElementById('charCounter');
+  const downloadBtn      = document.getElementById('downloadBtn');
+  const downloadZipBtn   = document.getElementById('downloadZipBtn');
+  const clearBtn         = document.getElementById('clearBtn');
+  const clearBtnSkill    = document.getElementById('clearBtnSkill');
+  const statusEl         = document.getElementById('status');
+  const tabKnowledge     = document.getElementById('tabKnowledge');
+  const tabSkill         = document.getElementById('tabSkill');
+  const skillPanel       = document.getElementById('skillPanel');
+  const knowledgeControls= document.getElementById('knowledgeControls');
+  const skillControls    = document.getElementById('skillControls');
+  const downloadSkillBtn = document.getElementById('downloadSkillBtn');
+  const previewSkillBtn  = document.getElementById('previewSkillBtn');
+  const skillPreviewEl   = document.getElementById('skillPreview');
+  const skillNameEl      = document.getElementById('skillName');
+  const skillDescEl      = document.getElementById('skillDescription');
+  const skillVersionEl   = document.getElementById('skillVersion');
+  const skillAuthorEl    = document.getElementById('skillAuthor');
+  const skillTagsEl      = document.getElementById('skillTags');
 
   const WARN_CHARS   = 18_000_000;
   const DANGER_CHARS = 20_000_000;
-  const API_BASE     = '';
+  const MD_REGEX     = /^#{1,6}\s|^[\*\-\+]\s|^>\s|```|\[.+?\]\(.+?\)|^\d+\.\s|\*\*.+?\*\*|__.+?__|^---/m;
 
-  const MD_REGEX = /^#{1,6}\s|^[\*\-\+]\s|^>\s|```|\[.+?\]\(.+?\)|^\d+\.\s|\*\*.+?\*\*|__.+?__|^---/m;
+  let mode = 'knowledge'; // 'knowledge' | 'skill'
 
-  // ── State ──
+  // ── Mode switching ───────────────────────────────────────────────────────────
+  tabKnowledge.addEventListener('click', () => setMode('knowledge'));
+  tabSkill.addEventListener('click',     () => setMode('skill'));
+
+  function setMode(m) {
+    mode = m;
+    if (m === 'skill') {
+      tabSkill.classList.add('active');
+      tabKnowledge.classList.remove('active');
+      skillPanel.classList.add('visible');
+      knowledgeControls.style.display = 'none';
+      skillControls.style.display = 'block';
+    } else {
+      tabKnowledge.classList.add('active');
+      tabSkill.classList.remove('active');
+      skillPanel.classList.remove('visible');
+      knowledgeControls.style.display = 'block';
+      skillControls.style.display = 'none';
+      skillPreviewEl.classList.remove('visible');
+    }
+    updateUI();
+  }
+
+  // ── State ─────────────────────────────────────────────────────────────────────
   function updateUI() {
     const text = textarea.value;
     const len  = text.length;
 
-    // char counter
     charCounter.textContent = len.toLocaleString() + ' characters';
-    charCounter.className = len > DANGER_CHARS ? 'danger' : len > WARN_CHARS ? 'warn' : '';
+    charCounter.className   = len > DANGER_CHARS ? 'danger' : len > WARN_CHARS ? 'warn' : '';
 
-    // format badge
     const fmt = formatSel.value;
-    let detectedExt;
-    if (fmt === 'md')  detectedExt = '.md';
-    else if (fmt === 'txt') detectedExt = '.txt';
-    else detectedExt = MD_REGEX.test(text) ? '.md' : '.txt';
+    let detectedExt = fmt === 'md' ? '.md' : fmt === 'txt' ? '.txt' : (MD_REGEX.test(text) ? '.md' : '.txt');
     formatBadge.textContent = detectedExt;
 
-    // buttons
     const hasContent = text.trim().length > 0;
     const tooLarge   = len > DANGER_CHARS;
+
+    // Knowledge buttons
     downloadBtn.disabled    = !hasContent || tooLarge;
     downloadZipBtn.disabled = !hasContent || tooLarge;
 
-    if (tooLarge) {
-      showStatus('⚠️ Text exceeds 20M characters. Please reduce before converting.', 'error');
-    } else if (len > WARN_CHARS) {
-      showStatus('⚠️ Approaching 18M character limit. File will be large.', 'info');
-    } else {
-      hideStatus();
-    }
+    // Skill buttons
+    const skillReady = hasContent && !tooLarge;
+    downloadSkillBtn.disabled = !skillReady;
+    previewSkillBtn.disabled  = !skillReady;
+
+    if (tooLarge) showStatus('⚠️ Text exceeds 20M characters. Please reduce before converting.', 'error');
+    else if (len > WARN_CHARS) showStatus('⚠️ Approaching 18M character limit. File will be large.', 'info');
+    else hideStatus();
   }
 
   function showStatus(msg, type = 'info') {
     statusEl.textContent = msg;
     statusEl.className   = `show ${type}`;
   }
+  function hideStatus() { statusEl.className = ''; statusEl.textContent = ''; }
 
-  function hideStatus() {
-    statusEl.className = '';
-    statusEl.textContent = '';
-  }
-
-  // ── Text input listeners ──
+  // ── Listeners ────────────────────────────────────────────────────────────────
   textarea.addEventListener('input', updateUI);
   formatSel.addEventListener('change', updateUI);
 
-  // ── Drag and drop ──
   dropZone.addEventListener('click', () => fileInput.click());
-
-  ['dragenter', 'dragover'].forEach(evt =>
-    dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('drag-over'); })
-  );
-  ['dragleave', 'drop'].forEach(evt =>
-    dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('drag-over'); })
-  );
-
-  dropZone.addEventListener('drop', e => {
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
-    readFile(file);
-  });
-
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-    readFile(file);
-    fileInput.value = '';
-  });
+  ['dragenter','dragover'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.add('drag-over'); }));
+  ['dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.remove('drag-over'); }));
+  dropZone.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) readFile(f); });
+  fileInput.addEventListener('change', () => { const f = fileInput.files[0]; if (f) { readFile(f); fileInput.value=''; } });
 
   function readFile(file) {
     if (!file.type.startsWith('text/') && !file.name.match(/\.(md|txt|csv|log|json|yaml|yml|html|xml|js|ts|py|sh)$/i)) {
-      showStatus('⚠️ Please drop a plain text or Markdown file.', 'error');
-      return;
+      showStatus('⚠️ Please drop a plain text or Markdown file.', 'error'); return;
     }
     showStatus('Reading file…', 'info');
     const reader = new FileReader();
-    reader.onload = e => {
-      textarea.value = e.target.result;
-      updateUI();
-      showStatus(`✓ Loaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`, 'success');
-    };
+    reader.onload = e => { textarea.value = e.target.result; updateUI(); showStatus(`✓ Loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`, 'success'); };
     reader.onerror = () => showStatus('Failed to read file.', 'error');
     reader.readAsText(file);
   }
 
-  // ── Clear ──
-  clearBtn.addEventListener('click', () => {
-    textarea.value = '';
-    hideStatus();
-    updateUI();
-  });
+  function clearAll() { textarea.value = ''; skillPreviewEl.classList.remove('visible'); hideStatus(); updateUI(); }
+  clearBtn.addEventListener('click', clearAll);
+  clearBtnSkill.addEventListener('click', clearAll);
 
-  // ── Download helpers ──
+  // ── Knowledge download ───────────────────────────────────────────────────────
   async function doDownload(endpoint) {
     const text = textarea.value;
     if (!text.trim()) { showStatus('Nothing to convert.', 'error'); return; }
@@ -393,32 +489,20 @@
     showStatus('Converting…', 'info');
 
     try {
-      const res = await fetch(`${API_BASE}${endpoint}`, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, format: formatSel.value })
       });
-
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
         throw new Error(err.error || `HTTP ${res.status}`);
       }
-
       const blob = await res.blob();
-      const disposition = res.headers.get('Content-Disposition') || '';
-      const fnMatch = disposition.match(/filename="?([^"]+)"?/);
-      const filename = fnMatch ? fnMatch[1] : (endpoint.includes('zip') ? 'document.zip' : 'document.md');
-
-      const url = URL.createObjectURL(blob);
-      const a   = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
-
-      showStatus(`✅ Downloaded: ${filename}`, 'success');
+      const disp = res.headers.get('Content-Disposition') || '';
+      const fnM  = disp.match(/filename="?([^"]+)"?/);
+      triggerDownload(blob, fnM ? fnM[1] : 'document.md');
+      showStatus(`✅ Downloaded!`, 'success');
     } catch (err) {
       showStatus(`❌ Error: ${err.message}`, 'error');
     } finally {
@@ -430,7 +514,78 @@
   downloadBtn.addEventListener('click',    () => doDownload('/convert'));
   downloadZipBtn.addEventListener('click', () => doDownload('/convert-zip'));
 
-  // ── Init ──
+  // ── Skill download ───────────────────────────────────────────────────────────
+  function getSkillPayload() {
+    const tagsRaw = skillTagsEl.value.trim();
+    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+    return {
+      text: textarea.value,
+      skillName: skillNameEl.value.trim(),
+      skillDescription: skillDescEl.value.trim(),
+      skillVersion: skillVersionEl.value.trim() || '1.0.0',
+      skillAuthor: skillAuthorEl.value.trim(),
+      skillTags: tags
+    };
+  }
+
+  function buildFrontmatterPreview(payload) {
+    let fm = `---\nname: "${payload.skillName || '(required)'}"\ndescription: "${payload.skillDescription || '(required)'}"\nversion: "${payload.skillVersion}"`;
+    if (payload.skillAuthor) fm += `\nauthor: "${payload.skillAuthor}"`;
+    if (payload.skillTags && payload.skillTags.length) {
+      fm += `\ntags:\n` + payload.skillTags.map(t => `  - ${t}`).join('\n');
+    }
+    fm += '\n---';
+    return fm;
+  }
+
+  previewSkillBtn.addEventListener('click', () => {
+    const payload = getSkillPayload();
+    skillPreviewEl.textContent = buildFrontmatterPreview(payload);
+    skillPreviewEl.classList.add('visible');
+  });
+
+  downloadSkillBtn.addEventListener('click', async () => {
+    const payload = getSkillPayload();
+    if (!payload.skillName) { showStatus('❌ Skill Name is required.', 'error'); skillNameEl.focus(); return; }
+    if (!payload.skillDescription) { showStatus('❌ Skill Description is required.', 'error'); skillDescEl.focus(); return; }
+    if (!payload.text.trim()) { showStatus('Nothing to convert.', 'error'); return; }
+
+    const origLabel = downloadSkillBtn.textContent;
+    downloadSkillBtn.disabled = true;
+    downloadSkillBtn.textContent = '⏳ Building SKILL.md…';
+    showStatus('Generating SKILL.md…', 'skill');
+
+    try {
+      const res = await fetch('/convert-skill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      triggerDownload(blob, 'SKILL.md');
+      showStatus('✅ SKILL.md downloaded — ready for Perplexity!', 'skill');
+    } catch (err) {
+      showStatus(`❌ Error: ${err.message}`, 'error');
+    } finally {
+      downloadSkillBtn.textContent = origLabel;
+      updateUI();
+    }
+  });
+
+  // ── Utility ──────────────────────────────────────────────────────────────────
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a   = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
   updateUI();
 </script>
 </body>
