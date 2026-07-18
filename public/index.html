@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text → Perplexity Converter</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3350;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --accent2: #22d3ee;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --success: #4ade80;
+      --warning: #fb923c;
+      --error: #f87171;
+      --radius: 10px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 820px;
+      margin-bottom: 1.25rem;
+    }
+
+    .card h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Drop zone */
+    #dropZone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--surface2);
+    }
+
+    #dropZone.drag-over {
+      border-color: var(--accent);
+      background: rgba(99,102,241,0.08);
+    }
+
+    #dropZone .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    #dropZone p { color: var(--text-muted); font-size: 0.9rem; }
+    #dropZone strong { color: var(--text); }
+
+    /* Textarea */
+    #textInput {
+      width: 100%;
+      height: 260px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #textInput:focus { border-color: var(--accent); }
+
+    /* Counter */
+    #charCounter {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    #charCounter.warn { color: var(--warning); font-weight: 600; }
+    #charCounter.danger { color: var(--error); font-weight: 700; }
+
+    /* Controls row */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    label { font-size: 0.88rem; color: var(--text-muted); }
+
+    select {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select:focus { border-color: var(--accent); }
+
+    .btn {
+      padding: 0.5rem 1.1rem;
+      border-radius: 7px;
+      border: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--error); border-color: var(--error); }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Status */
+    #status {
+      min-height: 2rem;
+      padding: 0.6rem 1rem;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    #status.show { display: block; }
+    #status.success { background: rgba(74,222,128,0.12); color: var(--success); border: 1px solid rgba(74,222,128,0.25); }
+    #status.error   { background: rgba(248,113,113,0.12); color: var(--error);   border: 1px solid rgba(248,113,113,0.25); }
+    #status.info    { background: rgba(99,102,241,0.1);  color: var(--accent-hover); border: 1px solid rgba(99,102,241,0.25); }
+
+    /* Badge */
+    #formatBadge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      background: rgba(99,102,241,0.15);
+      color: var(--accent-hover);
+      border: 1px solid rgba(99,102,241,0.3);
+      font-family: monospace;
+      margin-left: auto;
+    }
+
+    footer {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-align: center;
+      margin-top: 1rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✦ Text → Perplexity Converter</h1>
+  <p>Convert any text to a Perplexity Space–ready <code>.md</code> or <code>.txt</code> file</p>
+</header>
+
+<!-- Drop Zone -->
+<div class="card">
+  <h2>① Drop a File</h2>
+  <div id="dropZone">
+    <div class="icon">📂</div>
+    <p><strong>Drag &amp; drop</strong> a <code>.txt</code> or <code>.md</code> file here</p>
+    <p style="margin-top:0.3rem">or click to browse</p>
+    <input type="file" id="fileInput" accept=".txt,.md,text/*" style="display:none" />
+  </div>
+</div>
+
+<!-- Text Input -->
+<div class="card">
+  <h2>② Paste or Type Your Text</h2>
+  <textarea id="textInput" placeholder="Paste your content here — articles, notes, documentation, transcripts…"></textarea>
+  <div id="charCounter">0 characters</div>
+</div>
+
+<!-- Controls -->
+<div class="card">
+  <h2>③ Format &amp; Download</h2>
+  <div class="controls" style="margin-bottom:1rem">
+    <label for="formatSelect">Output format:</label>
+    <select id="formatSelect">
+      <option value="auto" selected>Auto-detect</option>
+      <option value="md">Force Markdown (.md)</option>
+      <option value="txt">Force Plain Text (.txt)</option>
+    </select>
+    <span id="formatBadge">.md</span>
+    <button class="btn btn-ghost" id="clearBtn" style="margin-left:auto">🗑 Clear</button>
+  </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="downloadBtn" disabled>⬇ Download .md / .txt</button>
+    <button class="btn btn-secondary" id="downloadZipBtn" disabled>📦 Download .zip</button>
+  </div>
+</div>
+
+<!-- Status -->
+<div id="status"></div>
+
+<footer>Converts text for upload to Perplexity Spaces · Max 18M characters · v1.0</footer>
+
+<script>
+  const textarea    = document.getElementById('textInput');
+  const dropZone    = document.getElementById('dropZone');
+  const fileInput   = document.getElementById('fileInput');
+  const formatSel   = document.getElementById('formatSelect');
+  const formatBadge = document.getElementById('formatBadge');
+  const charCounter = document.getElementById('charCounter');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const downloadZipBtn = document.getElementById('downloadZipBtn');
+  const clearBtn    = document.getElementById('clearBtn');
+  const statusEl    = document.getElementById('status');
+
+  const WARN_CHARS   = 18_000_000;
+  const DANGER_CHARS = 20_000_000;
+  const API_BASE     = '';
+
+  const MD_REGEX = /^#{1,6}\s|^[\*\-\+]\s|^>\s|```|\[.+?\]\(.+?\)|^\d+\.\s|\*\*.+?\*\*|__.+?__|^---/m;
+
+  // ── State ──
+  function updateUI() {
+    const text = textarea.value;
+    const len  = text.length;
+
+    // char counter
+    charCounter.textContent = len.toLocaleString() + ' characters';
+    charCounter.className = len > DANGER_CHARS ? 'danger' : len > WARN_CHARS ? 'warn' : '';
+
+    // format badge
+    const fmt = formatSel.value;
+    let detectedExt;
+    if (fmt === 'md')  detectedExt = '.md';
+    else if (fmt === 'txt') detectedExt = '.txt';
+    else detectedExt = MD_REGEX.test(text) ? '.md' : '.txt';
+    formatBadge.textContent = detectedExt;
+
+    // buttons
+    const hasContent = text.trim().length > 0;
+    const tooLarge   = len > DANGER_CHARS;
+    downloadBtn.disabled    = !hasContent || tooLarge;
+    downloadZipBtn.disabled = !hasContent || tooLarge;
+
+    if (tooLarge) {
+      showStatus('⚠️ Text exceeds 20M characters. Please reduce before converting.', 'error');
+    } else if (len > WARN_CHARS) {
+      showStatus('⚠️ Approaching 18M character limit. File will be large.', 'info');
+    } else {
+      hideStatus();
+    }
+  }
+
+  function showStatus(msg, type = 'info') {
+    statusEl.textContent = msg;
+    statusEl.className   = `show ${type}`;
+  }
+
+  function hideStatus() {
+    statusEl.className = '';
+    statusEl.textContent = '';
+  }
+
+  // ── Text input listeners ──
+  textarea.addEventListener('input', updateUI);
+  formatSel.addEventListener('change', updateUI);
+
+  // ── Drag and drop ──
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  ['dragenter', 'dragover'].forEach(evt =>
+    dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('drag-over'); })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('drag-over'); })
+  );
+
+  dropZone.addEventListener('drop', e => {
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    readFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    readFile(file);
+    fileInput.value = '';
+  });
+
+  function readFile(file) {
+    if (!file.type.startsWith('text/') && !file.name.match(/\.(md|txt|csv|log|json|yaml|yml|html|xml|js|ts|py|sh)$/i)) {
+      showStatus('⚠️ Please drop a plain text or Markdown file.', 'error');
+      return;
+    }
+    showStatus('Reading file…', 'info');
+    const reader = new FileReader();
+    reader.onload = e => {
+      textarea.value = e.target.result;
+      updateUI();
+      showStatus(`✓ Loaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`, 'success');
+    };
+    reader.onerror = () => showStatus('Failed to read file.', 'error');
+    reader.readAsText(file);
+  }
+
+  // ── Clear ──
+  clearBtn.addEventListener('click', () => {
+    textarea.value = '';
+    hideStatus();
+    updateUI();
+  });
+
+  // ── Download helpers ──
+  async function doDownload(endpoint) {
+    const text = textarea.value;
+    if (!text.trim()) { showStatus('Nothing to convert.', 'error'); return; }
+
+    const btnEl = endpoint.includes('zip') ? downloadZipBtn : downloadBtn;
+    const origLabel = btnEl.textContent;
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ Processing…';
+    showStatus('Converting…', 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, format: formatSel.value })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      const disposition = res.headers.get('Content-Disposition') || '';
+      const fnMatch = disposition.match(/filename="?([^"]+)"?/);
+      const filename = fnMatch ? fnMatch[1] : (endpoint.includes('zip') ? 'document.zip' : 'document.md');
+
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+      showStatus(`✅ Downloaded: ${filename}`, 'success');
+    } catch (err) {
+      showStatus(`❌ Error: ${err.message}`, 'error');
+    } finally {
+      btnEl.textContent = origLabel;
+      updateUI();
+    }
+  }
+
+  downloadBtn.addEventListener('click',    () => doDownload('/convert'));
+  downloadZipBtn.addEventListener('click', () => doDownload('/convert-zip'));
+
+  // ── Init ──
+  updateUI();
+</script>
+</body>
+</html>
